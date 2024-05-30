@@ -1,4 +1,4 @@
-name: Oreos_plugin
+name: Oreosplugin
 version: '${project.version}'
 main: org.oreo.oreo.OreosPlugin
 api-version: '1.20'
@@ -7,9 +7,19 @@ commands:
   kit_basic:
     description: Gives you a kit for battle
     usage: /<command>
-    aliases: kit_basic
+    aliases: [kit_basic, basic_kit]
 
   suicide: #simple suicide command
     description: Killing myself rn -nyxiia23 2024
     usage: /<command>
-    aliases: suicide 
+    aliases: [suicide, kms]
+
+  open_gui: #Open the custom gui
+    description: Hell yeah -oreo 2024
+    usage: /<command>
+    aliases: [ gui, test_gui ]
+
+  set_port: #Set a port
+    description: Hell yeah -oreo 2024
+    usage: /<command>
+    aliases: [ set_port ]

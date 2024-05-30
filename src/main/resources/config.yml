@@ -1,0 +1,9 @@
+
+on-creeper-death:
+  creeper-explode-on-death: true
+  creeper-spawn-tnt-on-death: false
+
+kit-commands:
+  command-cooldown-on: true #enable-disable the cooldown
+  command-cooldown: 10000 #in miliseconds
+  command-cooldown-fail-message: "You are on kit cooldown" #message to be displayed
