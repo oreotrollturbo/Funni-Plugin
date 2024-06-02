@@ -16,6 +16,8 @@ public final class OreosPlugin extends JavaPlugin {
     private File customConfigFile;
     private FileConfiguration customConfig;
 
+    public static ConfigReader AConfig;
+
     @Override
     public void onEnable() {
 
@@ -23,8 +25,12 @@ public final class OreosPlugin extends JavaPlugin {
 
         //Setting up custom config files for saving
 
-
-
+//        AConfig = new ConfigReader(this,"settings/","AConfig.yml");
+//        AConfig.saveDefaultConfig();
+//
+//        FileConfiguration aconfig = AConfig.getConfig();
+//        aconfig.set("ports","yes");
+//        ConfigReader.save(this.AConfig);
 
         //Setting up commands
         getLogger().info("onEnable is called!"); // Just to make sure
@@ -36,14 +42,15 @@ public final class OreosPlugin extends JavaPlugin {
         saveDefaultConfig();
         //Setting up Listeners
         getServer().getPluginManager().registerEvents(new OnPlayerJoin(),this);
-        getServer().getPluginManager().registerEvents(new OnFlagPlaced(),this);
+        getServer().getPluginManager().registerEvents(new OnFlagPlaced(this),this);
         getServer().getPluginManager().registerEvents(new OnFlagBroken(),this);
-        getServer().getPluginManager().registerEvents(new OnMobKilled(this),this);
+        //getServer().getPluginManager().registerEvents(new OnMobKilled(this),this); //This Spawns a copy of the mob that died where the mob died
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
         getLogger().info("onDisable is called!");
+        ConfigReader.save(this.AConfig);
     }
 }

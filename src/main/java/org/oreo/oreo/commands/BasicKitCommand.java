@@ -19,7 +19,7 @@ public class BasicKitCommand implements CommandExecutor {
     //long = when epoch time of when they ran the command
     private final HashMap<UUID, Long> cooldown;
 
-    private final OreosPlugin plugin;
+    private final OreosPlugin plugin; //Getting the plugin instance
 
 
     public BasicKitCommand(OreosPlugin plugin) {
@@ -32,11 +32,11 @@ public class BasicKitCommand implements CommandExecutor {
         ConfigurationSection section = this.plugin.getConfig().getConfigurationSection("kit-commands");
 
 
-        if (sender instanceof Player) {
+        if (sender instanceof Player) { //Make sure a player sent the command
             Player player = (Player) sender;
 
             if (!section.getBoolean("command-cooldown-on")){ //if the command cooldown is off then simply give the items
-                giveItems(player);
+                giveItems(player); //Gives the items
             }else if(!this.cooldown.containsKey(player.getUniqueId())){ //if its on add new players to the hash map
                 this.cooldown.put(player.getUniqueId(),System.currentTimeMillis());
                 giveItems(player);
