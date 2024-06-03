@@ -17,9 +17,9 @@ commands:
   open_gui: #Open the custom gui
     description: Hell yeah -oreo 2024
     usage: /<command>
-    aliases: [ gui, test_gui ]
+    aliases: [ kit_gui ]
 
-  set_port: #Set a port
-    description: Hell yeah -oreo 2024
+  team_gui: #Open the custom team gui
+    description: Pick a team
     usage: /<command>
-    aliases: [ set_port ]
+    aliases: [ teamgui, team_gui ]

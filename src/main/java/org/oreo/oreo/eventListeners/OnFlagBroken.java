@@ -10,12 +10,19 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
+
 public class OnFlagBroken implements Listener {
+
+    private final OnFlagPlaced onFlagPlaced;
+
+    public OnFlagBroken(OnFlagPlaced onFlagPlaced) {
+        this.onFlagPlaced = onFlagPlaced;
+    }
 
     @EventHandler
     public void onFlagBroken(BlockBreakEvent e) {
 
-        Block block = (Block) e.getBlock();
+        Block block = e.getBlock();
 
         int blockX = block.getX();
         int blockY = block.getY();
@@ -35,6 +42,12 @@ public class OnFlagBroken implements Listener {
                 e.setCancelled(true);
             }
         } else if (block.getBlockData().getMaterial().equals(Material.DEEPSLATE)){
+
+            Location blockLocation = block.getLocation();
+
+            // Removing flag location from the list in OnFlagPlaced
+            onFlagPlaced.getFlagLocations().remove(blockLocation);
+
             Player eventPlayer = e.getPlayer();
             String playerName = eventPlayer.getName();
 
@@ -44,14 +57,13 @@ public class OnFlagBroken implements Listener {
             Material torchMaterial = torchLocation.getBlock().getType();
             Material fenceMaterial = fenceLocation.getBlock().getType();
 
-            int chunkX = block.getChunk().getX();
-            int chunkZ = block.getChunk().getZ();
+            if (torchMaterial.equals(Material.TORCH) && fenceMaterial.equals(Material.OAK_FENCE)){
+                int chunkX = block.getChunk().getX();
+                int chunkZ = block.getChunk().getZ();
 
-            if  (torchMaterial.equals(Material.TORCH)){
                 torchLocation.getBlock().setType(Material.AIR);
-            }
-            if  (fenceMaterial.equals(Material.OAK_FENCE)){
                 fenceLocation.getBlock().setType(Material.AIR);
+
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     player.sendMessage(ChatColor.DARK_RED + "[War] " + playerName + " defended chunk (" + chunkX + "," + chunkZ + ") against Naples!");
                 }

@@ -1,56 +1,105 @@
 package org.oreo.oreo;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.oreo.oreo.commands.BasicKitCommand;
-import org.oreo.oreo.commands.OpenGuiCommand;
-import org.oreo.oreo.commands.SetPortCommand;
-import org.oreo.oreo.commands.SuicideCommand;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
+import org.oreo.oreo.commands.*;
 import org.oreo.oreo.eventListeners.*;
 
-import java.io.File;
+public final class OreosPlugin extends JavaPlugin implements Listener  {
 
-
-public final class OreosPlugin extends JavaPlugin {
-
-    private File customConfigFile;
-    private FileConfiguration customConfig;
-
-    public static ConfigReader AConfig;
+    private Scoreboard scoreboard;
+    private Team redTeam;
+    private Team bluTeam;
 
     @Override
-    public void onEnable() {
+    public void onEnable() {// Plugin startup logic
 
-        // Plugin startup logic
+        // Set up the scoreboard manager and main scoreboard
+        ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+        assert scoreboardManager != null;
+        scoreboard = scoreboardManager.getMainScoreboard();
 
-        //Setting up custom config files for saving
+        // Create or get the red team
+        redTeam = scoreboard.getTeam("Red");
+        if (redTeam == null) {
+            redTeam = scoreboard.registerNewTeam("Red");
+        }
+        redTeam.setPrefix("[Red] ");
+        redTeam.setColor(ChatColor.RED);
 
-//        AConfig = new ConfigReader(this,"settings/","AConfig.yml");
-//        AConfig.saveDefaultConfig();
-//
-//        FileConfiguration aconfig = AConfig.getConfig();
-//        aconfig.set("ports","yes");
-//        ConfigReader.save(this.AConfig);
+        // Create or get the blu team
+        bluTeam = scoreboard.getTeam("Blu");
+        if (bluTeam == null) {
+            bluTeam = scoreboard.registerNewTeam("Blu");
+        }
+        bluTeam.setPrefix("[Blu] ");
+        bluTeam.setColor(ChatColor.BLUE);
 
-        //Setting up commands
+
         getLogger().info("onEnable is called!"); // Just to make sure
+
         getCommand("kit_basic").setExecutor(new BasicKitCommand(this));
         getCommand("suicide").setExecutor(new SuicideCommand());
-        getCommand("set_port").setExecutor(new SetPortCommand(this));
-        getCommand("open_gui").setExecutor(new OpenGuiCommand(this));
+        getCommand("open_gui").setExecutor(new OpenGuiCommand(this)); //Setting up the commands
+        getCommand("team_gui").setExecutor(new TeamGuiCommand(this));
+
+        OnFlagPlaced syncFlags = new OnFlagPlaced(this); // This is to synchronise the flagLocation List
+        getServer().getPluginManager().registerEvents(syncFlags, this);
+        getServer().getPluginManager().registerEvents(this, this);
+        getServer().getPluginManager().registerEvents(new OnFlagBroken(syncFlags), this);
+        // getServer().getPluginManager().registerEvents(new OnMobKilled(this), this); // This Spawns a copy of the mob that died where the mob died
 
         saveDefaultConfig();
-        //Setting up Listeners
-        getServer().getPluginManager().registerEvents(new OnPlayerJoin(),this);
-        getServer().getPluginManager().registerEvents(new OnFlagPlaced(this),this);
-        getServer().getPluginManager().registerEvents(new OnFlagBroken(),this);
-        //getServer().getPluginManager().registerEvents(new OnMobKilled(this),this); //This Spawns a copy of the mob that died where the mob died
     }
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-        getLogger().info("onDisable is called!");
-        ConfigReader.save(this.AConfig);
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) { //Handle player joining
+        Player player = event.getPlayer();
+        String playername = player.getName();
+
+        if (playername.contains("oreotrollturbo")) {
+            player.sendMessage(ChatColor.DARK_RED + "Welcome back me :)");
+        } else {
+            event.setJoinMessage("Welcome to Oreo's plugin " + playername);
+        }
+        //addPlayerToRedTeam(player);
+    }
+
+    @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event) { //Remove players from teams
+        Player player = event.getPlayer();
+        String playername = player.getName();
+
+        removePlayerFromTeam(playername);
+    }
+
+    public void addPlayerToRedTeam(Player player){
+        redTeam.addEntry(player.getName());
+        player.setScoreboard(scoreboard);
+        player.sendMessage(ChatColor.GREEN + "Added you to the red team successfully !");
+    }
+
+    public void addPlayerToBluTeam(Player player){
+        bluTeam.addEntry(player.getName());
+        player.setScoreboard(scoreboard);
+        player.sendMessage(ChatColor.GREEN + "Added you to the blu team successfully !");
+    }
+
+    public void removePlayerFromTeam(String name){
+
+        if (redTeam.hasEntry(name)){
+            redTeam.removeEntry(name);
+        } else if (bluTeam.hasEntry(name)) {
+            bluTeam.removeEntry(name);
+        }
     }
 }
