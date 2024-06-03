@@ -4,10 +4,6 @@ main: org.oreo.oreo.OreosPlugin
 api-version: '1.20'
 
 commands:
-  kit_basic:
-    description: Gives you a kit for battle
-    usage: /<command>
-    aliases: [kit_basic, basic_kit]
 
   suicide: #simple suicide command
     description: Killing myself rn -nyxiia23 2024
@@ -17,9 +13,9 @@ commands:
   open_gui: #Open the custom gui
     description: Hell yeah -oreo 2024
     usage: /<command>
-    aliases: [ kit_gui ]
+    aliases: [ kit_gui, kits ]
 
   team_gui: #Open the custom team gui
     description: Pick a team
     usage: /<command>
-    aliases: [ teamgui, team_gui ]
+    aliases: [ teams ]

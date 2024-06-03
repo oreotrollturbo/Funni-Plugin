@@ -10,7 +10,6 @@ import org.oreo.oreo.OreosPlugin;
 
 public class OnMobKilled implements Listener {
 
-
     private final OreosPlugin plugin;
 
     public OnMobKilled(OreosPlugin plugin) {
@@ -46,7 +45,5 @@ public class OnMobKilled implements Listener {
         World w = event.getEntity().getWorld();
 
         w.spawnEntity(location,type);
-        //w.spawnEntity(location,type);
-
     }
 }

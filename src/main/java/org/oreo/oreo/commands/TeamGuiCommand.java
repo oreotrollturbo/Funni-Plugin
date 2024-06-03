@@ -20,7 +20,7 @@ import java.util.Arrays;
 
 public class TeamGuiCommand implements CommandExecutor , Listener {
 
-    private String invName = "team_picker";
+    private String invName = "Choose your team";
 
     private final OreosPlugin plugin;
 
@@ -55,17 +55,9 @@ public class TeamGuiCommand implements CommandExecutor , Listener {
 
     // You can call this whenever you want to put the items in
     public void initializeItems() {
-        inv.addItem(createGuiItem(Material.GRAY_STAINED_GLASS_PANE, "Blank", "   "));
-        inv.addItem(createGuiItem(Material.GRAY_STAINED_GLASS_PANE, "Blank", "  "));
-        inv.addItem(createGuiItem(Material.GRAY_STAINED_GLASS_PANE, "Blank", " "));
-
-        inv.addItem(createGuiItem(Material.RED_WOOL, "Red Team", ""));
-        inv.addItem(createGuiItem(Material.BARRIER , "Close", ""));
-        inv.addItem(createGuiItem(Material.BLUE_WOOL, "Blu Team", ""));
-
-        inv.addItem(createGuiItem(Material.GRAY_STAINED_GLASS_PANE, "Blank", "    "));
-        inv.addItem(createGuiItem(Material.GRAY_STAINED_GLASS_PANE, "Blank", "     "));
-        inv.addItem(createGuiItem(Material.GRAY_STAINED_GLASS_PANE, "Blank", "      "));
+        inv.setItem(3,createGuiItem(Material.RED_WOOL, "Red Team", ""));
+        inv.setItem(4,createGuiItem(Material.BARRIER , "Close", ""));
+        inv.setItem(5,createGuiItem(Material.BLUE_WOOL, "Blu Team", ""));
     }
 
     // Nice little method to create a gui item with a custom name, and description

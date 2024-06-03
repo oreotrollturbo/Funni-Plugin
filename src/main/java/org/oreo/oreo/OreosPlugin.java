@@ -47,9 +47,8 @@ public final class OreosPlugin extends JavaPlugin implements Listener  {
 
         getLogger().info("onEnable is called!"); // Just to make sure
 
-        getCommand("kit_basic").setExecutor(new BasicKitCommand(this));
         getCommand("suicide").setExecutor(new SuicideCommand());
-        getCommand("open_gui").setExecutor(new OpenGuiCommand(this)); //Setting up the commands
+        getCommand("open_gui").setExecutor(new KitGuiCommand(this)); //Setting up the commands
         getCommand("team_gui").setExecutor(new TeamGuiCommand(this));
 
         OnFlagPlaced syncFlags = new OnFlagPlaced(this); // This is to synchronise the flagLocation List
@@ -71,7 +70,6 @@ public final class OreosPlugin extends JavaPlugin implements Listener  {
         } else {
             event.setJoinMessage("Welcome to Oreo's plugin " + playername);
         }
-        //addPlayerToRedTeam(player);
     }
 
     @EventHandler

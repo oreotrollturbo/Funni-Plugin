@@ -1,6 +1,7 @@
 package org.oreo.oreo.commands;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,30 +17,28 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.oreo.oreo.OreosPlugin;
 
-
 import java.util.Arrays;
 
-public class OpenGuiCommand implements CommandExecutor , Listener {
+public class KitGuiCommand implements CommandExecutor , Listener { //The listener part is required to listen for players trying to drag the item out of the inventory
 
-    private String invName = "oreo Gui";
+    private String invName = "Choose your kit"; //The name of the gui (The text displayed above the inventory spaces)
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String s, String[] strings) {
+    public boolean onCommand(CommandSender sender, Command cmd, String s, String[] strings) { //When the command is executed
 
         if (sender instanceof Player){//making sure whoever sent this was in fact a player to avoid console shenanigans
-            Player player = (Player) sender;
 
-            openInventory(player);
+            Player player = (Player) sender; //Convert the sender object into a player object since we know its one (for utility)
+            openInventory(player); // Open the custom inventory for the player
 
-            return true;
+            return true; //Command successful
         }
-
-        return false;
+        return false; //If it isn't a player do nothing
     }
 
-    private final Inventory inv;
+    private final Inventory inv; // Declare the inventory to be used in various methods
 
-    public OpenGuiCommand(OreosPlugin plugin){
+    public KitGuiCommand(OreosPlugin plugin){
 
         Bukkit.getPluginManager().registerEvents(this,plugin);
 
@@ -50,11 +49,11 @@ public class OpenGuiCommand implements CommandExecutor , Listener {
         initializeItems();
     }
 
-    // You can call this whenever you want to put the items in
+    // Method used to put all of the items in the custom inventory
     public void initializeItems() {
-        inv.addItem(createGuiItem(Material.DIAMOND_SWORD, "Basic Kit", ""));
-        inv.addItem(createGuiItem(Material.STONE, "Builder Kit", ""));
-        inv.addItem(createGuiItem(Material.BOW, "Ranger Kit", ""));
+        inv.setItem(3,createGuiItem(Material.DIAMOND_SWORD, "Basic Kit", ""));
+        inv.setItem(4,createGuiItem(Material.STONE, "Builder Kit", ""));  //The items that will correspond to kits
+        inv.setItem(5,createGuiItem(Material.BOW, "Ranger Kit", ""));
     }
 
     // Nice little method to create a gui item with a custom name, and description
@@ -82,9 +81,9 @@ public class OpenGuiCommand implements CommandExecutor , Listener {
     // Check for clicks on items
     @EventHandler
     public void onInventoryClick(final InventoryClickEvent e) {
-        if (!e.getView().getTitle().equals(invName)) return;
+        if (!e.getView().getTitle().equals(invName)) return; //If it isn't our custom inventory don't do anything
 
-        e.setCancelled(true);
+        e.setCancelled(true); //Stop people from taking items out of the inventory via clicking
 
         final ItemStack clickedItem = e.getCurrentItem();
 
@@ -93,35 +92,26 @@ public class OpenGuiCommand implements CommandExecutor , Listener {
 
         final Player p = (Player) e.getWhoClicked();
 
-        // Using slots click is a best option for your inventory click's
+        // Each number corresponds to a slot ( 0 is top left )
 
         switch (e.getRawSlot()){
-            case 0:
-                giveBasicKit(p);
-                break;
-            case 1:
-                giveBuilderKit(p);
-                break;
-            case 2:
-                giveRangerKit(p);
-                break;
             case 3:
-                p.sendMessage("You clicked at the third slot");
+                p.getInventory().clear();
+                giveBasicKit(p);
+                p.closeInventory();
+                p.sendMessage(ChatColor.GREEN + "Kit selected successfully");
                 break;
             case 4:
-                p.sendMessage("You clicked at the fourth slot");
+                p.getInventory().clear(); //We always clear the players inventory before giving them a new kit to avoid kit combo shenanigans
+                giveBuilderKit(p);
+                p.closeInventory();
+                p.sendMessage(ChatColor.GREEN + "Kit selected successfully");
                 break;
             case 5:
-                p.sendMessage("You clicked at the fifth slot");
-                break;
-            case 6:
-                p.sendMessage("You clicked at the sixth slot");
-                break;
-            case 7:
-                p.sendMessage("You clicked at the seventh slot");
-                break;
-            case 8:
-                p.sendMessage("You clicked at the eighth slot");
+                p.getInventory().clear();
+                giveRangerKit(p);
+                p.closeInventory();
+                p.sendMessage(ChatColor.GREEN + "Kit selected successfully");
                 break;
         }
 
@@ -131,13 +121,13 @@ public class OpenGuiCommand implements CommandExecutor , Listener {
     @EventHandler
     public void onInventoryClick(final InventoryDragEvent e) {
         if (e.getView().getTitle().equals(invName)) {
-            e.setCancelled(true);
+            e.setCancelled(true); //Stop people from taking items out of the inventory via dragging
         }
     }
 
 
-    private void giveBasicKit(Player player){
-        ItemStack diamond = new ItemStack(Material.DIAMOND_SWORD);
+    private void giveBasicKit(Player player){ //The basic kit and all of its items
+        ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
         ItemStack pick = new ItemStack(Material.STONE_PICKAXE);
         ItemStack food = new ItemStack(Material.COOKED_BEEF);
 
@@ -147,20 +137,22 @@ public class OpenGuiCommand implements CommandExecutor , Listener {
         ItemStack boots = new ItemStack(Material.IRON_BOOTS);
         ItemStack shield = new ItemStack(Material.SHIELD);
 
-        food.setAmount(64);
+        food.setAmount(64); // Make the kit give you 64 of the food item
 
-        player.getInventory().addItem(diamond);
-        player.getInventory().addItem(pick);
+        player.getInventory().addItem(sword);
         player.getInventory().addItem(food);
-        player.getInventory().addItem(shield);
-        player.getInventory().addItem(leggings);
-        player.getInventory().addItem(chest);
-        player.getInventory().addItem(boots);
-        player.getInventory().addItem(helm);
+        player.getInventory().addItem(pick);
+
+        player.getInventory().setItemInOffHand(shield);//Adding the shield directly to the offhand
+
+        player.getInventory().setBoots(boots);
+        player.getInventory().setLeggings(leggings);
+        player.getInventory().setChestplate(chest);//Adding the armor directly to the armor slots
+        player.getInventory().setHelmet(helm);
     }
 
-    private void giveBuilderKit(Player player){
-        ItemStack diamond = new ItemStack(Material.IRON_SWORD);
+    private void giveBuilderKit(Player player){ //Gives the builder kit
+        ItemStack sword = new ItemStack(Material.IRON_SWORD);
         ItemStack pick = new ItemStack(Material.DIAMOND_PICKAXE);
         ItemStack food = new ItemStack(Material.COOKED_BEEF);
         ItemStack blocks = new ItemStack(Material.STONE);
@@ -173,18 +165,20 @@ public class OpenGuiCommand implements CommandExecutor , Listener {
         food.setAmount(64);
         blocks.setAmount(64);
 
-        player.getInventory().addItem(diamond);
-        player.getInventory().addItem(pick);
+        player.getInventory().addItem(sword);
         player.getInventory().addItem(food);
-        player.getInventory().addItem(blocks);
-        player.getInventory().addItem(leggings);
-        player.getInventory().addItem(chest);
-        player.getInventory().addItem(boots);
-        player.getInventory().addItem(helm);
+        player.getInventory().addItem(pick);
+
+        player.getInventory().setItemInOffHand(blocks); //The blocks are in the offhand
+
+        player.getInventory().setBoots(boots);
+        player.getInventory().setLeggings(leggings);//Adding the armor directly to the armor slots
+        player.getInventory().setChestplate(chest);
+        player.getInventory().setHelmet(helm);
     }
 
-    private void giveRangerKit(Player player){
-        ItemStack diamond = new ItemStack(Material.DIAMOND_SWORD);
+    private void giveRangerKit(Player player){ //Gives the ranger kit
+        ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
         ItemStack bow = new ItemStack(Material.BOW);
         ItemStack pick = new ItemStack(Material.STONE_PICKAXE);
         ItemStack food = new ItemStack(Material.COOKED_BEEF);
@@ -198,14 +192,16 @@ public class OpenGuiCommand implements CommandExecutor , Listener {
         food.setAmount(64);
         arrows.setAmount(64);
 
-        player.getInventory().addItem(diamond);
+        player.getInventory().addItem(sword);
+        player.getInventory().addItem(food);
         player.getInventory().addItem(bow);
         player.getInventory().addItem(pick);
-        player.getInventory().addItem(food);
+
         player.getInventory().addItem(arrows);
-        player.getInventory().addItem(leggings);
-        player.getInventory().addItem(chest);
-        player.getInventory().addItem(boots);
-        player.getInventory().addItem(helm);
+
+        player.getInventory().setBoots(boots);
+        player.getInventory().setLeggings(leggings);
+        player.getInventory().setChestplate(chest); //Adding the armor directly to the armor slots
+        player.getInventory().setHelmet(helm);
     }
 }
