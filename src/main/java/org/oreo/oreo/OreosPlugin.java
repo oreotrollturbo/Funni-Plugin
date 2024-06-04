@@ -98,7 +98,7 @@ public final class OreosPlugin extends JavaPlugin implements Listener  {
 
     public void removePlayerFromTeam(String name){ //A simple function to remove players from their team
 
-//This is hard coded there might be a better way if you have more teams but for this use its fine
+    //Having this hard-coded might not be the best way to go about it but for only two teams it will do ok
         if (redTeam.hasEntry(name)){
             redTeam.removeEntry(name);
         } else if (bluTeam.hasEntry(name)) {
