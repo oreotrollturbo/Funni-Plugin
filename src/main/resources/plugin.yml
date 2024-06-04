@@ -19,3 +19,8 @@ commands:
     description: Pick a team
     usage: /<command>
     aliases: [ teams ]
+
+  toggle_building: #Toggle building mode
+    description: Toggle war mode
+    usage: /<command>
+    aliases: [ war_toggle , war]

@@ -8,11 +8,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.oreo.oreo.OreosPlugin;
 
-public class OnMobKilled implements Listener {
+public class OnCreeperDeath implements Listener {
 
     private final OreosPlugin plugin;
 
-    public OnMobKilled(OreosPlugin plugin) {
+    public OnCreeperDeath(OreosPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -33,17 +33,9 @@ public class OnMobKilled implements Listener {
                 w.createExplosion(creeper.getLocation(),4);//Creates an intsant explosion
             }else if (section.getBoolean("creeper-spawn-tnt-on-death")){
                 TNTPrimed tnt = (TNTPrimed)w.spawnEntity(creeper.getLocation(), EntityType.PRIMED_TNT);
-                tnt.setFuseTicks(20);
+                // Creeper exploding on death takes priority over spawning tnt if both happen to be true
+                tnt.setFuseTicks(20); //Default tnt fuse time in ticks (can be changed)
             }
         }
-
-        LivingEntity entity = event.getEntity();
-        EntityType type = event.getEntityType();
-        Location location = entity.getLocation();
-        Player player = entity.getKiller();
-        assert player != null;
-        World w = event.getEntity().getWorld();
-
-        w.spawnEntity(location,type);
     }
 }

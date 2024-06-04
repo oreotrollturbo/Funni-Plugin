@@ -1,6 +1,4 @@
 
-on-creeper-death:
-  creeper-explode-on-death: true
+on-creeper-death: # This is for the OnCreeperDeath class
+  creeper-explode-on-death: true #If both are on this one takes priority
   creeper-spawn-tnt-on-death: false
-
-

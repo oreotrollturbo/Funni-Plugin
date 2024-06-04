@@ -13,9 +13,9 @@ public class SuicideCommand implements CommandExecutor {
         if (sender instanceof Player){//making sure whoever sent this was a player to avoid console shenanigans
             Player player = (Player) sender;
             player.setHealth(0); //Sets the players health to 0 thus killing them with the message ("player" died)
-            return true;
+            return true; //Command successful
         }
 
-        return false;
+        return false; // Command unsuccessful
     }
 }

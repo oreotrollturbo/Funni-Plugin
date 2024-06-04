@@ -48,14 +48,17 @@ public final class OreosPlugin extends JavaPlugin implements Listener  {
         getLogger().info("onEnable is called!"); // Just to make sure
 
         getCommand("suicide").setExecutor(new SuicideCommand());
+        getCommand("toggle_building").setExecutor(new ToggleWarModeCommand());
         getCommand("open_gui").setExecutor(new KitGuiCommand(this)); //Setting up the commands
         getCommand("team_gui").setExecutor(new TeamGuiCommand(this));
 
         OnFlagPlaced syncFlags = new OnFlagPlaced(this); // This is to synchronise the flagLocation List
+        getServer().getPluginManager().registerEvents(new OnDroppedItem(),this);
         getServer().getPluginManager().registerEvents(syncFlags, this);
         getServer().getPluginManager().registerEvents(this, this);
-        getServer().getPluginManager().registerEvents(new OnFlagBroken(syncFlags), this);
-        // getServer().getPluginManager().registerEvents(new OnMobKilled(this), this); // This Spawns a copy of the mob that died where the mob died
+        getServer().getPluginManager().registerEvents(new OnBlockBroken(syncFlags), this);
+        getServer().getPluginManager().registerEvents(new OnCreeperDeath(this), this); // This makes creepers explode on death when killed
+        getServer().getPluginManager().registerEvents(new OnMobDeath(this), this); // This spawns a copy of the mob where it died
 
         saveDefaultConfig();
     }
@@ -65,35 +68,36 @@ public final class OreosPlugin extends JavaPlugin implements Listener  {
         Player player = event.getPlayer();
         String playername = player.getName();
 
-        if (playername.contains("oreotrollturbo")) {
+        if (playername.contains("oreotrollturbo")) { // If its me send a funni message
             player.sendMessage(ChatColor.DARK_RED + "Welcome back me :)");
         } else {
-            event.setJoinMessage("Welcome to Oreo's plugin " + playername);
+            event.setJoinMessage(ChatColor.GREEN + "Welcome to Oreo's plugin " + playername); // Else welcome the player
         }
     }
 
     @EventHandler
-    public void onPlayerLeave(PlayerQuitEvent event) { //Remove players from teams
+    public void onPlayerLeave(PlayerQuitEvent event) { //Remove the player who left from his team
         Player player = event.getPlayer();
         String playername = player.getName();
 
         removePlayerFromTeam(playername);
     }
 
-    public void addPlayerToRedTeam(Player player){
-        redTeam.addEntry(player.getName());
-        player.setScoreboard(scoreboard);
+    public void addPlayerToRedTeam(Player player){ // A simple function to add a player to a team from any class
+        redTeam.addEntry(player.getName()); //Add them to the team object
+        player.setScoreboard(scoreboard); //Give them a fresh scoreboard
         player.sendMessage(ChatColor.GREEN + "Added you to the red team successfully !");
     }
 
-    public void addPlayerToBluTeam(Player player){
-        bluTeam.addEntry(player.getName());
-        player.setScoreboard(scoreboard);
+    public void addPlayerToBluTeam(Player player){ // A simple function to add a player to the blue team from any class
+        bluTeam.addEntry(player.getName()); //Add them to the team object
+        player.setScoreboard(scoreboard); //Give them a fresh scoreboard
         player.sendMessage(ChatColor.GREEN + "Added you to the blu team successfully !");
     }
 
-    public void removePlayerFromTeam(String name){
+    public void removePlayerFromTeam(String name){ //A simple function to remove players from their team
 
+//This is hard coded there might be a better way if you have more teams but for this use its fine
         if (redTeam.hasEntry(name)){
             redTeam.removeEntry(name);
         } else if (bluTeam.hasEntry(name)) {
