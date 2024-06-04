@@ -57,23 +57,20 @@ public class OnBlockBroken implements Listener {
                 Location fenceLocation = new Location(block.getWorld(), blockX,blockY - 1,blockZ); // Get the fence and torch location to check
                 Location torchLocation = new Location(block.getWorld(), blockX,blockY + 1,blockZ);
 
-                Material torchMaterial = torchLocation.getBlock().getType();
-                Material fenceMaterial = fenceLocation.getBlock().getType(); //Get their type to check if they are the correct ones
 
-                if (torchMaterial.equals(Material.TORCH) && fenceMaterial.equals(Material.OAK_FENCE)){ //If its a flag (has the correct blocks)
-                    int chunkX = block.getChunk().getX();
-                    int chunkZ = block.getChunk().getZ(); // Get the chunks to broadcast the message
+                int chunkX = block.getChunk().getX();
+                int chunkZ = block.getChunk().getZ(); // Get the chunks to broadcast the message
 
-                    torchLocation.getBlock().setType(Material.AIR);
-                    fenceLocation.getBlock().setType(Material.AIR); //Delete the torch and fence
+                torchLocation.getBlock().setType(Material.AIR);
+                fenceLocation.getBlock().setType(Material.AIR); //Delete the torch and fence
 
-                    Player eventPlayer = e.getPlayer();
-                    String playerName = eventPlayer.getName(); //Get the player and his name
+                Player eventPlayer = e.getPlayer();
+                String playerName = eventPlayer.getName(); //Get the player and his name
 
-                    for (Player player : Bukkit.getOnlinePlayers()) { //Broadcast a message to everyone
-                        player.sendMessage(ChatColor.DARK_RED + "[War] " + playerName + " defended chunk (" + chunkX + "," + chunkZ + ") against Naples!");
-                    }
+                for (Player player : Bukkit.getOnlinePlayers()) { //Broadcast a message to everyone
+                    player.sendMessage(ChatColor.DARK_RED + "[War] " + playerName + " defended chunk (" + chunkX + "," + chunkZ + ") against Naples!");
                 }
+
             }
         }
     }
