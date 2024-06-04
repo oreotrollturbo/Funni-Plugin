@@ -24,29 +24,32 @@ public class OnBlockBroken implements Listener {
     public void onFlagBroken(BlockBreakEvent e) {
 
         Block block = e.getBlock(); //Get the block broken
+        Location blockLocation = block.getLocation();
 
         int blockX = block.getX();
         int blockY = block.getY(); // Is always handy
         int blockZ = block.getZ();
 
-        if (ToggleWarModeCommand.isWarModeOn){ //We dont care about flags if war mode is off
+        if (ToggleWarModeCommand.isWarModeOn){ //We don't care about flags if war mode is off
 
-            if (block.getBlockData().getMaterial().equals(Material.OAK_FENCE)) { //If its an oak fence
+            if (block.getBlockData().getMaterial().equals(Material.OAK_FENCE)) { //If it's an oak fence
+
                 Location deepslateLocation = new Location(block.getWorld(),blockX,blockY + 1,blockZ);
 
-                if (deepslateLocation.getBlock().getBlockData().getMaterial().equals(Material.DEEPSLATE)){
-                    e.setCancelled(true); //If theres deepsalte above it then it cant break
-                } //TODO make it detect if its in the flag list
+                if (onFlagPlaced.getFlagLocations().contains(deepslateLocation)){
+                    e.setCancelled(true); //If the deepslate is a flag don't let the player break the flag
+                }
 
-            } else if (block.getBlockData().getMaterial().equals(Material.TORCH)){ // If its a torch
+            } else if (block.getBlockData().getMaterial().equals(Material.TORCH)){ // If it's a torch
                 Location deepslateLocation = new Location(block.getWorld(),blockX,blockY - 1,blockZ); //Get the deepsalte location
 
-                if (deepslateLocation.getBlock().getBlockData().getMaterial().equals(Material.DEEPSLATE)){
-                    e.setCancelled(true); //If there is deepslate bellow it we assume its a flag and dont let the player break the torch
+                if (onFlagPlaced.getFlagLocations().contains(deepslateLocation) &&
+                        deepslateLocation.getBlock().getBlockData().getMaterial().equals(Material.DEEPSLATE)){
+                    e.setCancelled(true); //If the block above it is deepslate and is a flag don't let the torch break
                 }
-            } else if (block.getBlockData().getMaterial().equals(Material.DEEPSLATE)){ //If its deepslate
+            } else if (block.getBlockData().getMaterial().equals(Material.DEEPSLATE) && onFlagPlaced.getFlagLocations().equals(blockLocation)){
+                //If its deepslate and its in the list
 
-                Location blockLocation = block.getLocation(); //Get its location
 
                 // Removing flag location from the flag list in OnFlagPlaced
                 onFlagPlaced.getFlagLocations().remove(blockLocation);
@@ -59,7 +62,7 @@ public class OnBlockBroken implements Listener {
 
                 if (torchMaterial.equals(Material.TORCH) && fenceMaterial.equals(Material.OAK_FENCE)){ //If its a flag (has the correct blocks)
                     int chunkX = block.getChunk().getX();
-                    int chunkZ = block.getChunk().getZ();
+                    int chunkZ = block.getChunk().getZ(); // Get the chunks to broadcast the message
 
                     torchLocation.getBlock().setType(Material.AIR);
                     fenceLocation.getBlock().setType(Material.AIR); //Delete the torch and fence

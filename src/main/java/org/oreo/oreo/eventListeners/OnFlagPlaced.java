@@ -44,14 +44,14 @@ public class OnFlagPlaced implements Listener {
                 if (location.getChunk().equals(deepslateLocation.getChunk())){
                     e.setCancelled(true);
                     player.sendMessage(ChatColor.RED + "Theres a flag within this chunk already");
-                    return; //If theres a flag in the same chunk cancel the event and dont do anything
+                    return; //If there is a flag in the same chunk cancel the event and don't do anything
                 }
             }
 
             if (!canSeeSky(world,blockX,blockY,blockZ)){ //Check if the flag can see the sky
                 e.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "Flag cannot see the sky"); //Send feedback
-                return; //If the flag doesent see the sky just stop
+                return; //If the flag doesn't see the sky just stop
             }
 
 
