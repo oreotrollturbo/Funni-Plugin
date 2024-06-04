@@ -58,7 +58,8 @@ public final class OreosPlugin extends JavaPlugin implements Listener  {
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new OnBlockBroken(syncFlags), this);
         getServer().getPluginManager().registerEvents(new OnCreeperDeath(this), this); // This makes creepers explode on death when killed
-        getServer().getPluginManager().registerEvents(new OnMobDeath(this), this); // This spawns a copy of the mob where it died
+        //getServer().getPluginManager().registerEvents(new OnMobDeath(this), this); // This spawns a copy of the mob where it died
+        getServer().getPluginManager().registerEvents(new FireBowEvents(), this);
 
         saveDefaultConfig();
     }
