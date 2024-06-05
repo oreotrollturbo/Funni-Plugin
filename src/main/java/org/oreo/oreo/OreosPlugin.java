@@ -1,7 +1,9 @@
 package org.oreo.oreo;
 
+import com.google.common.cache.LoadingCache;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -47,12 +49,14 @@ public final class OreosPlugin extends JavaPlugin implements Listener  {
 
         getLogger().info("onEnable is called!"); // Just to make sure
 
+        OnFlagPlaced syncFlags = new OnFlagPlaced(this); // This is to synchronise the flagLocation List
+
         getCommand("suicide").setExecutor(new SuicideCommand());
-        getCommand("toggle_building").setExecutor(new ToggleWarModeCommand());
+        getCommand("toggle_building").setExecutor(new ToggleWarModeCommand(syncFlags));
         getCommand("open_gui").setExecutor(new KitGuiCommand(this)); //Setting up the commands
         getCommand("team_gui").setExecutor(new TeamGuiCommand(this));
 
-        OnFlagPlaced syncFlags = new OnFlagPlaced(this); // This is to synchronise the flagLocation List
+
         getServer().getPluginManager().registerEvents(new OnDroppedItem(),this);
         getServer().getPluginManager().registerEvents(syncFlags, this);
         getServer().getPluginManager().registerEvents(this, this);
@@ -86,6 +90,7 @@ public final class OreosPlugin extends JavaPlugin implements Listener  {
 
     public void addPlayerToRedTeam(Player player){ // A simple function to add a player to a team from any class
         redTeam.addEntry(player.getName()); //Add them to the team object
+        Location spawn = new Location(player.getWorld(),0,100,0);
         player.setScoreboard(scoreboard); //Give them a fresh scoreboard
         player.sendMessage(ChatColor.GREEN + "Added you to the red team successfully !");
     }

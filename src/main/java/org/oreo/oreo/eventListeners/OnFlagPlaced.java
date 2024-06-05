@@ -25,13 +25,13 @@ public class OnFlagPlaced implements Listener {
     @EventHandler
     public void onFlagPlaced(BlockPlaceEvent e) {
 
-        if (ToggleWarModeCommand.isWarModeOn) {
+        Block block = e.getBlockPlaced();
 
-            Block block = e.getBlockPlaced();
+        if (ToggleWarModeCommand.isWarModeOn && block.getBlockData().getMaterial().equals(Material.OAK_FENCE)) {
+            //If the player placed a fence and war mode is on
+
             World world = block.getWorld(); //Get the world player and block for later
             Player player = e.getPlayer();
-
-            //If the player placed a fence and war mode is on
 
             int blockX = block.getX();
             int blockY = block.getY(); //Get the block coordinates
@@ -54,11 +54,10 @@ public class OnFlagPlaced implements Listener {
                 return; //If the flag doesn't see the sky just stop
             }
 
-
-            flagLocations.add(deepslateLocation); //Add the flag to the list
-
             deepslateLocation.getBlock().setType(Material.DEEPSLATE);
             torchLocation.getBlock().setType(Material.TORCH); //Create the deepslate and the torch
+
+            flagLocations.add(deepslateLocation); //Add the flag to the list
 
             Player eventPlayer = e.getPlayer();
             String playerName = eventPlayer.getName(); //Get the player
@@ -85,7 +84,8 @@ public class OnFlagPlaced implements Listener {
                         flagLocations.remove(deepslateLocation);
                     }
                 }
-            }, 200); //This is how long the code is delayed before being executed (in ticks)
+            }, 400); //This is how long the code is delayed before being executed (in ticks)
+            // 20 secs
         }
 
     }
@@ -98,5 +98,24 @@ public class OnFlagPlaced implements Listener {
     private boolean canSeeSky(World world ,int x ,int y ,int z){
         Block highestBlock = world.getHighestBlockAt(x,z); //Gets the xyz coords and checks if that block can "see the sky"
         return !(highestBlock.getY() > y);
+    }
+
+    public void deleteAllFlags() { //Deletes all flags
+
+        for (Location flag : flagLocations){ //Loops through and deletes all flags
+
+            World world = flag.getWorld();
+            int x = flag.getBlockX();
+            int y = flag.getBlockY(); // Get the flags xyz
+            int z = flag.getBlockZ();
+
+            Location torchLocation = new Location(world,x,y + 1,z); //Get the flags locations
+            Location fenceLocation = new Location(world,x,y - 1,z);
+
+            torchLocation.getBlock().setType(Material.AIR);  //Delete the torch first or else it will drop as an item
+            flag.getBlock().setType(Material.AIR); //Delete the flag
+            fenceLocation.getBlock().setType(Material.AIR);
+        }
+        flagLocations.clear(); //Clear all flags
     }
 }

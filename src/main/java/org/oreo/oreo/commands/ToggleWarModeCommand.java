@@ -1,26 +1,37 @@
 package org.oreo.oreo.commands;
 
-import net.md_5.bungee.chat.SelectorComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.oreo.oreo.eventListeners.OnFlagPlaced;
 
 public class ToggleWarModeCommand implements CommandExecutor {
 
-    public static boolean isWarModeOn = false;//This boolean is used in other classes to see if war is on
-// Server restarts automatically disable war mode
+    public static boolean isWarModeOn = true;//This boolean is used in other classes to see if war is on
+// Server restarts automatically turn on war mode
+
+    private final OnFlagPlaced onFlagPlaced;
+
+    public ToggleWarModeCommand(OnFlagPlaced onFlagPlaced){
+        this.onFlagPlaced = onFlagPlaced;
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String s, String[] strings) {
-        isWarModeOn = !isWarModeOn;
+        isWarModeOn = !isWarModeOn; // Invert the war mode
 
-        if (isWarModeOn){ //If the war mode is on turn it off
+        if (isWarModeOn){ //send the message
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.sendMessage(ChatColor.DARK_RED + "§l War mode is enabled"); //Send a message to all players
             }
-        }else { // If the war mode is off turn it on
+        }else { // send the message to all players
+
+            onFlagPlaced.deleteAllFlags(); //Delete all the physical flags
+            onFlagPlaced.getFlagLocations().clear(); //Clear the flag list
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.sendMessage(ChatColor.DARK_RED + "§l War mode is disabled");//Send a message to all players
             }
