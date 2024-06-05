@@ -130,6 +130,7 @@ public class KitGuiCommand implements CommandExecutor , Listener { //The listene
         ItemStack sword = new ItemStack(Material.DIAMOND_SWORD);
         ItemStack pick = new ItemStack(Material.STONE_PICKAXE);
         ItemStack food = new ItemStack(Material.COOKED_BEEF);
+        ItemStack fence = new ItemStack(Material.OAK_FENCE);
 
         ItemStack helm = new ItemStack(Material.IRON_HELMET);
         ItemStack chest = new ItemStack(Material.IRON_CHESTPLATE);
@@ -138,10 +139,12 @@ public class KitGuiCommand implements CommandExecutor , Listener { //The listene
         ItemStack shield = new ItemStack(Material.SHIELD);
 
         food.setAmount(64); // Make the kit give you 64 of the food item
+        fence.setAmount(64);
 
         player.getInventory().addItem(sword);
         player.getInventory().addItem(food);
         player.getInventory().addItem(pick);
+        player.getInventory().addItem(fence);
 
         player.getInventory().setItemInOffHand(shield);//Adding the shield directly to the offhand
 
@@ -156,6 +159,7 @@ public class KitGuiCommand implements CommandExecutor , Listener { //The listene
         ItemStack pick = new ItemStack(Material.DIAMOND_PICKAXE);
         ItemStack food = new ItemStack(Material.COOKED_BEEF);
         ItemStack blocks = new ItemStack(Material.STONE);
+        ItemStack fence = new ItemStack(Material.OAK_FENCE);
 
         ItemStack helm = new ItemStack(Material.IRON_HELMET);
         ItemStack chest = new ItemStack(Material.IRON_CHESTPLATE);
@@ -164,10 +168,13 @@ public class KitGuiCommand implements CommandExecutor , Listener { //The listene
 
         food.setAmount(64);
         blocks.setAmount(64);
+        fence.setAmount(64);
+
 
         player.getInventory().addItem(sword);
         player.getInventory().addItem(food);
         player.getInventory().addItem(pick);
+        player.getInventory().addItem(fence);
 
         player.getInventory().setItemInOffHand(blocks); //The blocks are in the offhand
 
@@ -183,6 +190,8 @@ public class KitGuiCommand implements CommandExecutor , Listener { //The listene
         ItemStack pick = new ItemStack(Material.STONE_PICKAXE);
         ItemStack food = new ItemStack(Material.COOKED_BEEF);
         ItemStack arrows = new ItemStack(Material.ARROW);
+        ItemStack campFire = new ItemStack(Material.CAMPFIRE);
+        ItemStack fence = new ItemStack(Material.OAK_FENCE);
 
         ItemStack helm = new ItemStack(Material.LEATHER_HELMET);
         ItemStack chest = new ItemStack(Material.LEATHER_CHESTPLATE);
@@ -191,11 +200,15 @@ public class KitGuiCommand implements CommandExecutor , Listener { //The listene
 
         food.setAmount(64);
         arrows.setAmount(64);
+        campFire.setAmount(64);
+        fence.setAmount(64);
 
         player.getInventory().addItem(sword);
         player.getInventory().addItem(food);
         player.getInventory().addItem(bow);
         player.getInventory().addItem(pick);
+        player.getInventory().addItem(campFire);
+        player.getInventory().addItem(fence);
 
         player.getInventory().addItem(arrows);
 

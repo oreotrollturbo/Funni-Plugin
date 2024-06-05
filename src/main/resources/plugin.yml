@@ -18,9 +18,14 @@ commands:
   team_gui: #Open the custom team gui
     description: Pick a team
     usage: /<command>
-    aliases: [ teams ]
+    aliases: [ team_gui ]
 
   toggle_building: #Toggle building mode
     description: Toggle war mode
     usage: /<command>
     aliases: [ war_toggle , war]
+
+  team_spawn: #Teleports you to your teams spawn
+    description: Teleports you to your teams spawn
+    usage: /<command>
+    aliases: [ team_spawn ]

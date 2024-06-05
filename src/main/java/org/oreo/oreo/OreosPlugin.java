@@ -4,6 +4,7 @@ import com.google.common.cache.LoadingCache;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,8 +20,8 @@ import org.oreo.oreo.eventListeners.*;
 public final class OreosPlugin extends JavaPlugin implements Listener  {
 
     private Scoreboard scoreboard;
-    private Team redTeam;
-    private Team bluTeam;
+    private static Team redTeam;
+    private static Team bluTeam;
 
     @Override
     public void onEnable() {// Plugin startup logic
@@ -55,6 +56,7 @@ public final class OreosPlugin extends JavaPlugin implements Listener  {
         getCommand("toggle_building").setExecutor(new ToggleWarModeCommand(syncFlags));
         getCommand("open_gui").setExecutor(new KitGuiCommand(this)); //Setting up the commands
         getCommand("team_gui").setExecutor(new TeamGuiCommand(this));
+        getCommand("team_spawn").setExecutor(new SpawnCommand());
 
 
         getServer().getPluginManager().registerEvents(new OnDroppedItem(),this);
@@ -84,13 +86,11 @@ public final class OreosPlugin extends JavaPlugin implements Listener  {
     public void onPlayerLeave(PlayerQuitEvent event) { //Remove the player who left from his team
         Player player = event.getPlayer();
         String playername = player.getName();
-
         removePlayerFromTeam(playername);
     }
-
+    //TODO Make a /t Spawn
     public void addPlayerToRedTeam(Player player){ // A simple function to add a player to a team from any class
         redTeam.addEntry(player.getName()); //Add them to the team object
-        Location spawn = new Location(player.getWorld(),0,100,0);
         player.setScoreboard(scoreboard); //Give them a fresh scoreboard
         player.sendMessage(ChatColor.GREEN + "Added you to the red team successfully !");
     }
@@ -109,5 +109,15 @@ public final class OreosPlugin extends JavaPlugin implements Listener  {
         } else if (bluTeam.hasEntry(name)) {
             bluTeam.removeEntry(name);
         }
+    }
+
+    public static String getTeamName(String playerName){
+
+        if (redTeam.hasEntry(playerName)){ //This method returns the team name because it just makes it simpler
+            return redTeam.getName();
+        } else if (bluTeam.hasEntry(playerName)) {
+            return bluTeam.getName();
+        }
+        return null;
     }
 }
