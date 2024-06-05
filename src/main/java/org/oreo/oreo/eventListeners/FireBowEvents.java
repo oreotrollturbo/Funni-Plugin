@@ -2,6 +2,7 @@ package org.oreo.oreo.eventListeners;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -26,10 +27,11 @@ public class FireBowEvents implements Listener {
     public void BowLight(PlayerInteractEvent e) {
         Player player = e.getPlayer(); //Get the player
         Block block = e.getClickedBlock(); //Get the block
+        World world = player.getWorld();
 
         if (block != null && isHoldingBow(player) && isCorrectBlock(block) && !fireArrow.contains(player)){ // Make sure the block isn't null to avoid errors
             fireArrow.add(player);
-            player.playSound(player.getLocation(), Sound.ENTITY_BLAZE_SHOOT, 1f, 1f);
+            world.playSound(player.getLocation(), Sound.ENTITY_BLAZE_SHOOT, 1f, 1f);
         }
     }
 

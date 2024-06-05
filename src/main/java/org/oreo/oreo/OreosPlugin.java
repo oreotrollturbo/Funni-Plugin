@@ -1,6 +1,5 @@
 package org.oreo.oreo;
 
-import com.google.common.cache.LoadingCache;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -60,6 +59,7 @@ public final class OreosPlugin extends JavaPlugin implements Listener  {
 
 
         getServer().getPluginManager().registerEvents(new OnDroppedItem(),this);
+        getServer().getPluginManager().registerEvents(new OnPlayerDeath(this),this);
         getServer().getPluginManager().registerEvents(syncFlags, this);
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new OnBlockBroken(syncFlags), this);
@@ -80,6 +80,10 @@ public final class OreosPlugin extends JavaPlugin implements Listener  {
         } else {
             event.setJoinMessage(ChatColor.GREEN + "Welcome to Oreo's plugin " + playername); // Else welcome the player
         }
+        World world = player.getWorld();
+
+        Location spawnLocation = new Location(world,236,149,210);
+        player.teleport(spawnLocation); //Instantly teleport them to the correct spawn
     }
 
     @EventHandler
