@@ -60,6 +60,7 @@ public class OnBlockBroken implements Listener {
                 int chunkZ = block.getChunk().getZ(); // Get the chunks to broadcast the message
 
                 torchLocation.getBlock().setType(Material.AIR);
+                block.setType(Material.AIR);
                 fenceLocation.getBlock().setType(Material.AIR); //Delete the torch and fence
 
                 Player eventPlayer = e.getPlayer();

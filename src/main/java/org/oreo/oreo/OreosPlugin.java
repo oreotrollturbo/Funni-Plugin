@@ -65,7 +65,7 @@ public final class OreosPlugin extends JavaPlugin implements Listener  {
         getServer().getPluginManager().registerEvents(new OnBlockBroken(syncFlags), this);
         getServer().getPluginManager().registerEvents(new OnCreeperDeath(this), this); // This makes creepers explode on death when killed
         //getServer().getPluginManager().registerEvents(new OnMobDeath(this), this); // This spawns a copy of the mob where it died
-        getServer().getPluginManager().registerEvents(new FireBowEvents(), this);
+        getServer().getPluginManager().registerEvents(new FireBowEvents(this), this);
 
         saveDefaultConfig();
     }
@@ -92,7 +92,7 @@ public final class OreosPlugin extends JavaPlugin implements Listener  {
         String playername = player.getName();
         removePlayerFromTeam(playername);
     }
-    //TODO Make a /t Spawn
+
     public void addPlayerToRedTeam(Player player){ // A simple function to add a player to a team from any class
         redTeam.addEntry(player.getName()); //Add them to the team object
         player.setScoreboard(scoreboard); //Give them a fresh scoreboard

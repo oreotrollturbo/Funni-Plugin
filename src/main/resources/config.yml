@@ -1,3 +1,6 @@
+arrow-time-burning: 200 #In ticks
+# 200 ticks = 10 secs
+# Fire deals damage every one seconds
 
 on-creeper-death: # This is for the OnCreeperDeath class
   creeper-explode-on-death: true #If both are on this one takes priority
